@@ -4,7 +4,7 @@ install_trizen () {
     git clone https://aur.archlinux.org/trizen.git
     cd trizen
     makepkg -d
-    sudo -k -S pacman -U *.pkg.tar.gz --noconfirm --needed <<< $PASSWORD
+    sudo -k -S pacman -U *.pkg.tar.xz --noconfirm --needed <<< $PASSWORD
     cd ..
     rm -rf trizen
 }
