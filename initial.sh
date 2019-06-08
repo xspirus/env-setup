@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source .env
-printf "[archlinuxfr]\nSigLevel = Never\nServer = http://repo.archlinux.fr/\$arch\n" | { echo $PASSWORD; cat -; } | sudo -k -S tee -a /etc/pacman.conf
+printf "$PASSWORD\n[archlinuxfr]\nSigLevel = Never\nServer = http://repo.archlinux.fr/\$arch\n" | sudo -k -S tee -a /etc/pacman.conf
 sudo -k -S pacman -Sy <<< $PASSWORD
 sudo -k -S pacman -S python python-pip git --noconfirm --needed <<< $PASSWORD
 curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
