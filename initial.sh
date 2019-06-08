@@ -6,6 +6,8 @@ git clone https://aur.archlinux.org/trizen.git
 cd trizen
 makepkg -d
 sudo -k -S pacman -U *.pkg.tar.gz --noconfirm --needed <<< $PASSWORD
+cd ..
+rm -rf trizen
 sudo -k -S pacman -Sy <<< $PASSWORD
 sudo -k -S pacman -S python python-pip git --noconfirm --needed <<< $PASSWORD
 curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
