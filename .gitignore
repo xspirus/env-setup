@@ -1,6 +1,9 @@
 # General
 .env
 
+# Editors
+.vscode
+
 # Python
 .venv/
 venv/
