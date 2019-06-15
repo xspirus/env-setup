@@ -35,7 +35,8 @@ install_setup () {
     git branch arch/debian
     git pull origin arch/debian
     poetry install
-    poetry run debian
+    source .venv/bin/activate
+    debian
 }
 
 sudo -k -S apt-get update <<< $PASSWORD
