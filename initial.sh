@@ -36,7 +36,6 @@ install_oh-my-zsh () {
     git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
     ln -sf $HOME/dotfiles/.zshrc $HOME/.zshrc
-    source $HOME/.zshrc
 }
 
 install_pyenv () {
@@ -89,5 +88,5 @@ case "$1" in
         install_oh-my-zsh
         install_pyenv
         curl -fsSL https://raw.githubusercontent.com/xspirus/env-setup/arch/debian/initial.sh > /home/$USERNAME/initial.sh
-        su - $USERNAME "/home/$USERNAME/initial.sh user"
+        su - $USERNAME -c "bash /home/$USERNAME/initial.sh user"
 esac
