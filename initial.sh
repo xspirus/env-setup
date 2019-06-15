@@ -86,7 +86,9 @@ case "$1" in
         install_general
         install_oh-my-zsh
         install_pyenv
-        git clone https://github.com/xspirus/env-setup.git /home/$USERNAME/env-setup
-        cp .env /home/$USERNAME/env-setup/.env
-        su - $USERNAME -c "cd /home/$USERNAME/env-setup && bash initial.sh user"
+        # git clone https://github.com/xspirus/env-setup.git /home/$USERNAME/env-setup
+        # cp .env /home/$USERNAME/env-setup/.env
+        # cd /home/$USERNAME/env-setup
+        # git checkout arch/debian
+        # su - $USERNAME -c "cd /home/$USERNAME/env-setup && bash initial.sh user"
 esac
