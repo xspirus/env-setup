@@ -77,7 +77,6 @@ case "$1" in
     "user")
         install_oh-my-zsh
         install_poetry
-        install_setup
         ;;
     *)
         echo "${BLUE}Running as root${RESET}"
