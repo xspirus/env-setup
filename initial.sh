@@ -18,7 +18,7 @@ setup_colors () {
 }
 
 install_general () {
-    echo "${BLUE}Doing some general maintentance${RESET}"
+    echo "${BLUE}Doing some general changes${RESET}"
     apt-get --yes install git zsh fontconfig
     # change shell for all users of bash
     sed 's/\(.*\):\/bin\/bash/\1:\/bin\/zsh/' -i /etc/passwd
@@ -30,6 +30,7 @@ install_general () {
 install_oh-my-zsh () {
     echo "${BLUE}Installing OHMYZSH${RESET}"
     git clone https://github.com/xspirus/dotfiles.git $HOME/dotfiles
+    sed 's/export PYENV_ROOT=.*/export PYENV\_ROOT=\/usr\/local\/pyenv/' -i $HOME/dotfiles/.zshrc
     git clone https://github.com/robbyrussell/oh-my-zsh.git $HOME/.oh-my-zsh
     ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
     git clone https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k
@@ -57,7 +58,6 @@ liblzma-dev python-openssl git
 install_poetry () {
     echo "${BLUE}Installing poetry${RESET}"
     curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
-    echo -e "\nexport PATH=\$HOME/.poetry/bin:\$PATH" | tee -a $HOME/.bashrc
     export PATH=$HOME/.poetry/bin:$PATH
     poetry config settings.virtualenvs.in-project true
 }
@@ -87,6 +87,7 @@ case "$1" in
         install_general
         install_oh-my-zsh
         install_pyenv
-        curl -fsSL https://raw.githubusercontent.com/xspirus/env-setup/arch/debian/initial.sh > /home/$USERNAME/initial.sh
-        su - $USERNAME -c "bash /home/$USERNAME/initial.sh user"
+        git clone https://github.com/xspirus/env-setup.git /home/$USERNAME/env-setup
+        cp .env /home/$USERNAME/env-setup/.env
+        su - $USERNAME -c "cd /home/$USERNAME/env-setup && bash initial.sh user"
 esac
