@@ -89,3 +89,4 @@ case "$1" in
         install_oh-my-zsh
         install_pyenv
         su - $USERNAME "/root/initial.sh user"
+esac
