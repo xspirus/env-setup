@@ -1,19 +1,39 @@
 #!/bin/bash
 
-PYENV_STRING="\nexport PATH=\"$HOME/.pyenv/bin:\$PATH\"\n"
+PYENV_STRING="\nexport PYENV_ROOT=/usr/local/pyenv\n"
+PYENV_STRING="${PYENV_STRING}export PATH=${PYENV_ROOT}/bin:$PATH\n"
 PYENV_STRING="${PYENV_STRING}eval \"\$(pyenv init -)\"\n"
 PYENV_STRING="${PYENV_STRING}eval \"\$(pyenv virtualenv-init -)\""
 
 source .env
 
+install_general () {
+    apt-get --yes install git zsh fontconfig
+    # change shell for all users of bash
+    sed 's/\(.*\):\/bin\/bash/\1:\/bin\/zsh/' -i /etc/passwd
+    # install nerd font
+    wget -O /usr/local/share/fonts/dejavunerd.ttf https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/DejaVuSansMono/Regular/complete/DejaVu%20Sans%20Mono%20Nerd%20Font%20Complete.ttf
+    fc-cache
+}
+
+install_oh-my-zsh () {
+    git clone https://github.com/xspirus/dotfiles.git
+    git clone https://github.com/robbyrussell/oh-my-zsh.git
+    ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
+    git clone https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k
+    git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
+    ln -sf dotfiles/.zshrc .zshrc
+}
+
 install_pyenv () {
-    sudo -k -S apt-get --yes install make build-essential gcc g++ llvm \
+    apt-get --yes install make build-essential gcc g++ llvm \
 libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev \
 libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev \
-liblzma-dev python-openssl git <<< $PASSWORD
+liblzma-dev python-openssl git
+    export PYENV_ROOT="/usr/local/pyenv"
     curl https://pyenv.run | bash
-    echo -e $PYENV_STRING | tee -a $HOME/.bashrc
-    export PATH=$HOME/.pyenv/bin:$PATH
+    export PATH=${PYENV_ROOT}/bin:$PATH
     eval "$(pyenv init -)"
     eval "$(pyenv virtualenv-init -)"
     pyenv install 2.7.16
@@ -39,8 +59,11 @@ install_setup () {
     debian
 }
 
-sudo -k -S apt-get update <<< $PASSWORD
-sudo -k -S apt-get --yes upgrade <<< $PASSWORD
+apt-get update
+apt-get --yes upgrade
+install_oh-my-zsh
 install_pyenv
+su - $USERNAME
+install_oh-my-zsh
 install_poetry
 install_setup
