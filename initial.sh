@@ -88,4 +88,4 @@ case "$1" in
         install_general
         install_oh-my-zsh
         install_pyenv
-        sudo -S su - $USERNAME "/root/initial.sh user"
+        su - $USERNAME "/root/initial.sh user"
