@@ -61,6 +61,7 @@ install_setup () {
 
 apt-get update
 apt-get --yes upgrade
+install_general
 install_oh-my-zsh
 install_pyenv
 su - $USERNAME
