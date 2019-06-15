@@ -88,5 +88,6 @@ case "$1" in
         install_general
         install_oh-my-zsh
         install_pyenv
-        su - $USERNAME "/root/initial.sh user"
+        curl -fsSL https://raw.githubusercontent.com/xspirus/env-setup/arch/debian/initial.sh > /home/$USERNAME/initial.sh
+        su - $USERNAME "/home/$USERNAME/initial.sh user"
 esac
