@@ -7,7 +7,18 @@ PYENV_STRING="${PYENV_STRING}eval \"\$(pyenv virtualenv-init -)\""
 
 source .env
 
+# Functions
+setup_colors () {
+    RED=$(printf '\033[31m')
+    GREEN=$(printf '\033[32m')
+    YELLOW=$(printf '\033[33m')
+    BLUE=$(printf '\033[34m')
+    BOLD=$(printf '\033[1m')
+    RESET=$(printf '\033[m')
+}
+
 install_general () {
+    echo "${BLUE}Doing some general maintentance${RESET}"
     apt-get --yes install git zsh fontconfig
     # change shell for all users of bash
     sed 's/\(.*\):\/bin\/bash/\1:\/bin\/zsh/' -i /etc/passwd
@@ -17,16 +28,19 @@ install_general () {
 }
 
 install_oh-my-zsh () {
-    git clone https://github.com/xspirus/dotfiles.git
-    git clone https://github.com/robbyrussell/oh-my-zsh.git
+    echo "${BLUE}Installing OHMYZSH${RESET}"
+    git clone https://github.com/xspirus/dotfiles.git $HOME/dotfiles
+    git clone https://github.com/robbyrussell/oh-my-zsh.git $HOME/.oh-my-zsh
     ZSH_CUSTOM=$HOME/.oh-my-zsh/custom
     git clone https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k
     git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
-    ln -sf dotfiles/.zshrc .zshrc
+    ln -sf $HOME/dotfiles/.zshrc $HOME/.zshrc
+    source $HOME/.zshrc
 }
 
 install_pyenv () {
+    echo "${BLUE}Installing pyenv${RESET}"
     apt-get --yes install make build-essential gcc g++ llvm \
 libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev \
 libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev \
@@ -42,6 +56,7 @@ liblzma-dev python-openssl git
 }
 
 install_poetry () {
+    echo "${BLUE}Installing poetry${RESET}"
     curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
     echo -e "\nexport PATH=\$HOME/.poetry/bin:\$PATH" | tee -a $HOME/.bashrc
     export PATH=$HOME/.poetry/bin:$PATH
@@ -59,12 +74,18 @@ install_setup () {
     debian
 }
 
-apt-get update
-apt-get --yes upgrade
-install_general
-install_oh-my-zsh
-install_pyenv
-su - $USERNAME
-install_oh-my-zsh
-install_poetry
-install_setup
+case "$1" in
+    "user")
+        install_oh-my-zsh
+        install_poetry
+        install_setup
+        ;;
+    *)
+        echo "${BLUE}Running as root${RESET}"
+        apt-get update
+        echo "${BLUE}Upgrading system${RESET}"
+        apt-get --yes upgrade
+        install_general
+        install_oh-my-zsh
+        install_pyenv
+        sudo -S su - $USERNAME "/root/initial.sh user"
