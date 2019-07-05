@@ -79,6 +79,7 @@ case "$1" in
         install_poetry
         ;;
     *)
+        setup_colors
         echo "${BLUE}Running as root${RESET}"
         apt-get update
         echo "${BLUE}Upgrading system${RESET}"
