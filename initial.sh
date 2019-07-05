@@ -57,8 +57,7 @@ liblzma-dev python-openssl git
 
 install_poetry () {
     echo "${BLUE}Installing poetry${RESET}"
-    curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
-    export PATH=$HOME/.poetry/bin:$PATH
+    pip install -U poetry
     poetry config settings.virtualenvs.in-project true
 }
 
@@ -76,7 +75,6 @@ install_setup () {
 case "$1" in
     "user")
         install_oh-my-zsh
-        install_poetry
         ;;
     *)
         setup_colors
@@ -87,9 +85,10 @@ case "$1" in
         install_general
         install_oh-my-zsh
         install_pyenv
-        # git clone https://github.com/xspirus/env-setup.git /home/$USERNAME/env-setup
-        # cp .env /home/$USERNAME/env-setup/.env
-        # cd /home/$USERNAME/env-setup
-        # git checkout arch/debian
-        # su - $USERNAME -c "cd /home/$USERNAME/env-setup && bash initial.sh user"
+        install_poetry
+        git clone https://github.com/xspirus/env-setup.git /home/$USERNAME/env-setup
+        cp .env /home/$USERNAME/env-setup/.env
+        cd /home/$USERNAME/env-setup
+        git checkout arch/debian
+        su - $USERNAME -c "cd /home/$USERNAME/env-setup && bash initial.sh user"
 esac
